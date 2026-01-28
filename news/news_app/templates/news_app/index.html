@@ -1,0 +1,41 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock title %}
+
+{% block extra__css %}
+<link rel="stylesheet" href="{% static   "news_app/css/index.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+    <section>
+    <div class="main">
+        <h2>Последние новости:</h2>
+        <div class="wrapper">
+            
+            {% if latest_news %}
+                {% for news in latest_news %}
+                <div class="news_card">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}" class="news_image">
+                    {% else %}
+                    <div class="news_image_placeholder">
+                        <span>Нет изображения</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="news_content">
+                        <span class="news_date">{{ news.published_to|date:"d.m.Y" }}</span>
+                        <h3 class="news_title">{{ news.title }}</h3>
+                        <p class="news_description">{{ news.short_description|truncatechars:100 }}</p>
+                        <a href="{% url 'news_detail' news.id %}" class="read_more">Читать далее →</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no_news">Новостей пока нет.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,107 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Добавить новость{% endblock title %}
+
+{% block extra__css %}
+<link rel="stylesheet" href="{% static "news_db/css/add_news.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="add-news-container">
+    <div class="add-news-header">
+        <h1>📝 Добавить новость</h1>
+        <p class="subtitle">Создайте новую статью для публикации</p>
+    </div>
+
+    <div class="add-news-form-wrapper">
+        <form class="add-news-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="form-messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="form-section">
+                <h3>📋 Основная информация</h3>
+                
+                <div class="form-group">
+                    <label for="title">Заголовок новости *</label>
+                    <input type="text" id="title" name="title" required 
+                           placeholder="Введите заголовок новости" maxlength="200">
+                    <small class="form-hint">Максимум 200 символов</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="short_description">Краткое описание *</label>
+                    <textarea id="short_description" name="short_description" required 
+                              placeholder="Краткое описание новости (будет отображаться в списке)" 
+                              maxlength="75" rows="2"></textarea>
+                    <small class="form-hint">Максимум 75 символов. Будет отображаться в карточке новости</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Полный текст новости *</label>
+                    <textarea id="description" name="description" required 
+                              placeholder="Полный текст новости..." rows="10"></textarea>
+                    <small class="form-hint">Поддерживается HTML разметка</small>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>🖼️ Изображение</h3>
+                
+                <div class="form-group">
+                    <label for="image">Загрузить изображение</label>
+                    <div class="file-upload">
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <div class="file-upload-preview" id="imagePreview">
+                            <div class="preview-placeholder">
+                                <span>📷</span>
+                                <p>Нажмите для выбора изображения</p>
+                                <small>Рекомендуемый размер: 1200×630 px</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>⚙️ Дополнительные настройки</h3>
+                
+                <div class="form-group">
+                    <label for="published_date">Дата публикации</label>
+                    <input type="datetime-local" id="published_date" name="published_date" 
+                           value="{{ default_date }}">
+                    <small class="form-hint">Если не указано, будет использована текущая дата</small>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="is_active" name="is_active" checked>
+                    <label for="is_active">Опубликовать сразу</label>
+                    <small class="form-hint">Если снять галочку, новость будет сохранена как черновик</small>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    <span>📤 Опубликовать новость</span>
+                </button>
+                <a href="{% url 'news' %}" class="cancel-btn">
+                    <span>❌ Отмена</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra__js %}
+
+{% endblock extra__js %}

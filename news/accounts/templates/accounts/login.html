@@ -1,0 +1,65 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Вход на сайт{% endblock title %}
+
+{% block extra__css %}
+    <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+    <section class="login_section">
+        <form method="POST" class="login_form" action="{% url 'login' %}">
+            {% csrf_token %}
+            
+            <div class="welcome-card">
+                <div class="welcome-icon">👋</div>
+                <h3 class="welcome-heading">Добро пожаловать на сайт!</h3>
+                <p class="welcome-text">Если у вас есть зарегистрированный аккаунт<br>то входите без проблем</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <input type="text" name="username" id="id_username" 
+                       placeholder="Введите имя пользователя"
+                       value="{{ form.username.value|default:'' }}" required autofocus>
+                {% if form.username.errors %}
+                    <div class="error-text">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password">Пароль</label>
+                <input type="password" name="password" id="id_password" 
+                       placeholder="Введите пароль" required>
+                {% if form.password.errors %}
+                    <div class="error-text">{{ form.password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Войти в аккаунт</button>
+            
+            <div class="links">
+                <a href="{% url 'registration' %}">Создать аккаунт</a>
+            </div>
+            
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+        </form>
+    </section>
+{% endblock content %}

@@ -1,0 +1,596 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #e0e0ff;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(52, 152, 219, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(155, 89, 182, 0.08) 0%, transparent 50%);
+    z-index: -1;
+}
+
+/* ХЕДЕР в стиле футера */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 0 40px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #3498db;
+}
+
+header > a:first-child {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+    gap: 15px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(46, 204, 113, 0.2));
+    border-radius: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+header > a:first-child:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(46, 204, 113, 0.3));
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+}
+
+header > a:first-child img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    padding: 3px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+nav {
+    flex: 1;
+    margin: 0 30px;
+}
+
+header ul {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+}
+
+header li {
+    position: relative;
+}
+
+header nav a {
+    display: inline-block;
+    padding: 15px 25px;
+    color: #b0b0d0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+header nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+header nav a:hover::before {
+    left: 100%;
+}
+
+header nav a:hover {
+    color: #ffffff;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(46, 204, 113, 0.2));
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+header nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+header nav a:hover::after {
+    width: 100%;
+}
+
+/* АВТОРИЗАЦИЯ в стиле футера */
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-btn, .register-btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.login-btn {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(41, 128, 185, 0.1));
+    color: #b0b0d0;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(41, 128, 185, 0.25));
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.25);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
+.register-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+}
+
+.register-btn:hover {
+    background: linear-gradient(135deg, #27ae60, #219653);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(46, 204, 113, 0.4);
+}
+
+/* АВАТАР в стиле футера */
+.avatar-link {
+    display: inline-block;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    margin-right: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+}
+
+.avatar-link:hover .avatar {
+    transform: scale(1.1) rotate(10deg);
+    border-color: rgba(52, 152, 219, 0.6);
+}
+
+/* ПРОФИЛЬ в стиле футера */
+.profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 204, 113, 0.1));
+    color: #b0b0d0;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-right: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.profile-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.profile-link:hover::before {
+    left: 100%;
+}
+
+.profile-link:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.25), rgba(46, 204, 113, 0.2));
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.25);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+/* КНОПКА ВЫХОДА в стиле футера */
+.minimal-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.1));
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.minimal-logout-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.minimal-logout-btn:hover::before {
+    left: 100%;
+}
+
+.minimal-logout-btn:hover {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.25), rgba(192, 57, 43, 0.2));
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.4);
+}
+
+.minimal-logout-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.minimal-icon {
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: inline-block;
+}
+
+.minimal-logout-btn:hover .minimal-icon {
+    transform: translateX(5px) rotate(45deg);
+}
+
+/* УВЕДОМЛЕНИЯ в стиле футера */
+.notifications-container {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 380px;
+}
+
+.notification {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+    border-radius: 15px;
+    padding: 18px 22px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    border-left: 6px solid;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #e0e0ff;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-icon {
+    font-size: 26px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--icon-color1), var(--icon-color2));
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.notification-message {
+    font-size: 15px;
+    color: #b0b0d0;
+    line-height: 1.5;
+}
+
+.notification-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 20px;
+    color: #b0b0d0;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+.notification-close:hover {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+/* Типы уведомлений с градиентами */
+.notification-success {
+    border-left-color: #2ecc71;
+    --icon-color1: #2ecc71;
+    --icon-color2: #27ae60;
+}
+
+.notification-success .notification {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.05));
+}
+
+.notification-error,
+.notification-danger {
+    border-left-color: #e74c3c;
+    --icon-color1: #e74c3c;
+    --icon-color2: #c0392b;
+}
+
+.notification-warning {
+    border-left-color: #f39c12;
+    --icon-color1: #f39c12;
+    --icon-color2: #e67e22;
+}
+
+.notification-info {
+    border-left-color: #3498db;
+    --icon-color1: #3498db;
+    --icon-color2: #2980b9;
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification.hiding {
+    animation: slideOutRight 0.4s forwards;
+}
+
+/* КОНТЕНТ в стиле футера */
+.content-wrapper {
+    flex: 1;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    background: rgba(26, 26, 46, 0.7);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 1200px) {
+    header {
+        padding: 0 20px;
+    }
+    
+    header nav a {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    header > a:first-child {
+        order: 1;
+        margin-right: auto;
+    }
+    
+    nav {
+        order: 3;
+        width: 100%;
+        margin: 15px 0 0;
+    }
+    
+    header ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .auth-section {
+        order: 2;
+        margin-left: 0;
+    }
+    
+    .minimal-logout-btn {
+        order: 4;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .login-btn, .register-btn, .profile-link {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+    
+    .avatar {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .notifications-container {
+        top: 70px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+}
+
+@media (max-width: 480px) {
+    header > a:first-child {
+        font-size: 22px;
+        padding: 8px 12px;
+    }
+    
+    header > a:first-child img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    header nav a {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .auth-section {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .notification {
+        padding: 15px 18px;
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.social-link:hover .social-icon,
+.avatar-link:hover .avatar {
+    animation: float 0.5s ease-in-out;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+header::after,
+.content-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+}
+
+.content-wrapper::before {
+    top: 0;
+    bottom: auto;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+}

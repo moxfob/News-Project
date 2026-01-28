@@ -1,0 +1,88 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Изменение Email{% endblock %}
+
+{% block extra__css %}
+    <link rel="stylesheet" href="{% static "accounts/css/edit_email.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="change-email-container">
+    <div class="change-email-card">
+        <div class="change-email-header">
+            <div class="email-icon">📧</div>
+            <h2>Изменение Email</h2>
+            <p>Введите новый email адрес и подтвердите его</p>
+        </div>
+        
+        <form method="POST" class="change-email-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_current_email">{{ form.current_email.label }}</label>
+                {{ form.current_email }}
+                {% if form.current_email.errors %}
+                    <div class="error-text">{{ form.current_email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_new_email">{{ form.new_email.label }}</label>
+                {{ form.new_email }}
+                {% if form.new_email.errors %}
+                    <div class="error-text">{{ form.new_email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_confirm_email">{{ form.confirm_email.label }}</label>
+                {{ form.confirm_email }}
+                {% if form.confirm_email.errors %}
+                    <div class="error-text">{{ form.confirm_email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="error-text">{{ form.password.errors }}</div>
+                {% endif %}
+                <small class="form-hint">Для безопасности требуется подтверждение паролем</small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Сохранить изменения</button>
+                <a href="{% url 'my_profile' %}" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+        
+        <div class="email-security-info">
+            <h3>🔒 Безопасность</h3>
+            <ul>
+                <li>Email будет использоваться для восстановления пароля</li>
+                <li>На новый email будет отправлено письмо с подтверждением</li>
+                <li>Старый email больше не будет доступен для входа</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+</style>
+{% endblock %}

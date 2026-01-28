@@ -1,0 +1,177 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Контакты{% endblock title %}
+
+{% block extra__css %}
+<link rel="stylesheet" href="{% static "news_app/css/contacts.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="contacts-container">
+    <div class="contacts-header">
+        <h1>Контакты</h1>
+        <p class="subtitle">Свяжитесь с нами любым удобным способом</p>
+    </div>
+
+    <div class="contacts-content">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2>Контактная информация</h2>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-details">
+                        <h4>Адрес</h4>
+                        <p>г. Москва, ул. Примерная, д. 123<br>Бизнес-центр "Новостной", офис 456</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-details">
+                        <h4>Телефоны</h4>
+                        <p>+7 (495) 123-45-67 - Главный редактор<br>+7 (495) 987-65-43 - Реклама<br>+7 (800) 555-35-35 - Техподдержка (бесплатно)</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <div class="contact-details">
+                        <h4>Электронная почта</h4>
+                        <p>info@newsportal.ru - Общие вопросы<br>editor@newsportal.ru - Редакция<br>ads@newsportal.ru - Реклама<br>support@newsportal.ru - Техподдержка</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">⏰</div>
+                    <div class="contact-details">
+                        <h4>Часы работы</h4>
+                        <p>Пн-Пт: 9:00 - 18:00<br>Сб: 10:00 - 16:00<br>Вс: выходной</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-section">
+                <h2>Напишите нам</h2>
+                <form class="contact-form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ваше имя *</label>
+                        <input type="text" id="name" name="name" required placeholder="Иван Иванов">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="example@mail.ru">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Тема</label>
+                        <select id="subject" name="subject">
+                            <option value="general">Общий вопрос</option>
+                            <option value="editorial">Редакция</option>
+                            <option value="advertising">Реклама</option>
+                            <option value="support">Техподдержка</option>
+                            <option value="cooperation">Сотрудничество</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Сообщение *</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Ваше сообщение..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Отправить сообщение</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="departments-section">
+            <h2>Отделы и службы</h2>
+            <div class="departments-grid">
+                <div class="department-card">
+                    <div class="department-icon">📰</div>
+                    <h3>Редакция</h3>
+                    <p>Отдел новостей и контента</p>
+                    <div class="department-contact">
+                        <strong>Телефон:</strong> +7 (495) 111-22-33<br>
+                        <strong>Email:</strong> news@newsportal.ru
+                    </div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">💼</div>
+                    <h3>Реклама</h3>
+                    <p>Размещение рекламы</p>
+                    <div class="department-contact">
+                        <strong>Телефон:</strong> +7 (495) 222-33-44<br>
+                        <strong>Email:</strong> advertising@newsportal.ru
+                    </div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🔧</div>
+                    <h3>Техподдержка</h3>
+                    <p>Помощь пользователям</p>
+                    <div class="department-contact">
+                        <strong>Телефон:</strong> +7 (800) 555-35-35<br>
+                        <strong>Email:</strong> tech@newsportal.ru
+                    </div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🤝</div>
+                    <h3>Сотрудничество</h3>
+                    <p>Партнерские программы</p>
+                    <div class="department-contact">
+                        <strong>Телефон:</strong> +7 (495) 333-44-55<br>
+                        <strong>Email:</strong> partners@newsportal.ru
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="social-section">
+            <h2>Мы в социальных сетях</h2>
+            <div class="social-links">
+                <a href="#" class="social-link vk">
+                    <span class="social-icon">VK</span>
+                    <span>ВКонтакте</span>
+                </a>
+                <a href="#" class="social-link tg">
+                    <span class="social-icon">TG</span>
+                    <span>Telegram</span>
+                </a>
+                <a href="#" class="social-link yt">
+                    <span class="social-icon">YT</span>
+                    <span>YouTube</span>
+                </a>
+                <a href="#" class="social-link ok">
+                    <span class="social-icon">OK</span>
+                    <span>Одноклассники</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="map-section">
+            <h2>Как нас найти</h2>
+            <div class="map-placeholder">
+                <div class="map-content">
+                    <div class="map-marker">📍</div>
+                    <p>г. Москва, ул. Примерная, д. 123</p>
+                    <div class="map-instructions">
+                        <h4>Как добраться:</h4>
+                        <ul>
+                            <li>🚇 Метро "Новостная" - 5 минут пешком</li>
+                            <li>🚌 Автобусы: 123, 456, 789</li>
+                            <li>🚗 Парковка на территории</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

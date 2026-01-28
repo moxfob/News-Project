@@ -1,0 +1,72 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}{{ news.title }} - Новости{% endblock %}
+
+{% block extra__css %}
+    <link rel="stylesheet" href="{% static "news_db/css/news_detail.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="news-detail">
+    <div class="breadcrumbs">
+        <a href="/">Главная</a> / 
+        <a href="{% url 'news' %}">Новости</a> / 
+        <span>{{ news.title|truncatechars:40 }}</span>
+    </div>
+
+    <div class="news-header">
+        <h1>{{ news.title }}</h1>
+        
+        <div class="news-meta">
+            <div class="meta-item">
+                <i class="calendar-icon">📅</i>
+                <span>{{ news.published_to|date:"d.m.Y в H:i" }}</span>
+            </div>
+            
+            <div class="meta-item">
+                <i class="update-icon">✏️</i>
+                <span>Обновлено: {{ news.updated_to|date:"d.m.Y" }}</span>
+            </div>
+            
+            <div class="meta-item">
+                <i class="status-icon">●</i>
+                <span class="status-{% if news.is_active %}active{% else %}inactive{% endif %}">
+                    {% if news.is_active %}Активно{% else %}Неактивно{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {% if news.image %}
+    <div class="news-image-wrapper">
+        <img src="{{ news.image.url }}" 
+             alt="{{ news.title }}" 
+             class="news-main-image"
+             loading="lazy">
+    </div>
+    {% endif %}
+
+    {% if news.short_description %}
+    <div class="news-short-desc">
+        <h3>Кратко:</h3>
+        <p>{{ news.short_description }}</p>
+    </div>
+    {% endif %}
+
+    <div class="news-full-content">
+        <h3>Подробности:</h3>
+        <div class="news-description">
+            {{ news.description|linebreaks }}
+        </div>
+    </div>
+
+    <div class="news-actions">
+        <a href="{% url 'news' %}" class="back-btn">
+            ← Вернуться к списку новостей
+        </a>
+        
+    </div>
+</div>
+
+{% endblock content %}

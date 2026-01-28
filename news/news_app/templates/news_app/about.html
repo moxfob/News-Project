@@ -1,0 +1,122 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}О компании{% endblock title %}
+
+{% block extra__css %}
+<link rel="stylesheet" href="{% static "news_app/css/about.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="about-container">
+    <div class="about-header">
+        <h1>О нашей компании</h1>
+        <p class="subtitle">Ваш надежный источник новостей с 2024 года</p>
+    </div>
+
+    <div class="about-content">
+        <div class="mission-section">
+            <div class="mission-card">
+                <div class="mission-icon">🎯</div>
+                <h3>Наша миссия</h3>
+                <p>Предоставлять актуальные, достоверные и объективные новости в максимально удобном формате. Мы стремимся быть первыми, но никогда не жертвуем качеством ради скорости.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">💡</div>
+                <h3>Наши ценности</h3>
+                <p>Честность, объективность, оперативность и уважение к нашим читателям. Мы верим в силу качественной журналистики и ее роль в современном обществе.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">🚀</div>
+                <h3>Наше видение</h3>
+                <p>Стать ведущим новостным порталом, который задает стандарты качества в цифровой журналистике и формирует информационную повестку дня.</p>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2>Цифры говорят сами за себя</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_news|default:"0" }}+</div>
+                    <div class="stat-label">Новостей</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_users|default:"0" }}+</div>
+                    <div class="stat-label">Пользователей</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Работаем круглосуточно</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ visitors_today|default:"0" }}+</div>
+                    <div class="stat-label">Посетителей ежедневно</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>Наша команда</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar">👨‍💻</div>
+                    <h4>Главный редактор</h4>
+                    <p>Отвечает за качество контента и редакционную политику</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">👩‍🎤</div>
+                    <h4>Журналисты</h4>
+                    <p>Профессионалы с многолетним опытом работы</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">👨‍💼</div>
+                    <h4>Редакторы</h4>
+                    <p>Обеспечивают качество и точность материалов</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">👩‍🔧</div>
+                    <h4>Техническая команда</h4>
+                    <p>Поддерживает работу платформы 24/7</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="principles-section">
+            <h2>Принципы работы</h2>
+            <div class="principles-list">
+                <div class="principle-item">
+                    <span class="principle-icon">✓</span>
+                    <span class="principle-text">Проверка фактов перед публикацией</span>
+                </div>
+                <div class="principle-item">
+                    <span class="principle-icon">✓</span>
+                    <span class="principle-text">Независимость от политических партий</span>
+                </div>
+                <div class="principle-item">
+                    <span class="principle-icon">✓</span>
+                    <span class="principle-text">Четкое разделение фактов и мнений</span>
+                </div>
+                <div class="principle-item">
+                    <span class="principle-icon">✓</span>
+                    <span class="principle-text">Быстрое исправление ошибок</span>
+                </div>
+                <div class="principle-item">
+                    <span class="principle-icon">✓</span>
+                    <span class="principle-text">Открытость к обратной связи</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h3>Присоединяйтесь к нашему сообществу!</h3>
+            <p>Зарегистрируйтесь, чтобы получать персонализированные новости, комментировать и участвовать в обсуждениях.</p>
+            {% if not user.is_authenticated %}
+            <div class="cta-buttons">
+                <a href="{% url 'register' %}" class="cta-btn primary">Зарегистрироваться</a>
+                <a href="{% url 'login' %}" class="cta-btn secondary">Войти</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

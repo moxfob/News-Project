@@ -1,0 +1,53 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block title %}Добавить Email{% endblock %}
+
+{% block extra__css %}
+    <link rel="stylesheet" href="{% static "accounts/css/add_email.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="email-form-container">
+    <div class="email-form-card">
+        <div class="email-form-header">
+            <h2>📧 Добавить Email</h2>
+            <p>Добавьте email для получения уведомлений и восстановления пароля</p>
+        </div>
+        
+        <form method="POST" class="email-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_email">Email адрес</label>
+                <input type="email" 
+                       name="email" 
+                       id="id_email" 
+                       value="{{ form.email.value|default:'' }}"
+                       placeholder="example@email.com"
+                       required
+                       class="email-input">
+                {% if form.email.errors %}
+                    <div class="error-text">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Сохранить Email</button>
+                <a href="{% url 'my_profile' %}" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+</style>
+{% endblock %}

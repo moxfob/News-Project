@@ -1,0 +1,373 @@
+{% extends "news_app/base.html" %}
+{% load static %}
+
+{% block extra__css %}
+<link rel="stylesheet" href="{% static "accounts/css/profile.css" %}">
+{% endblock extra__css %}
+
+{% block content %}
+<div class="profile-container">
+<h2>Профиль пользователя {{ user.username }}</h2>
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="profile-info">
+    <div class="avatar-section">
+        {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+        {% else %}
+            <div class="default-avatar">
+                {{ user.username|first|upper }}
+            </div>
+        {% endif %}
+        
+        {% if user.is_superuser or user.is_staff %}
+        <div class="admin-badge">
+            <span class="admin-icon">⚡</span>
+            <span class="admin-text">
+                {% if user.is_superuser %}
+                    АДМИНИСТРАТОР
+                {% elif user.is_staff %}
+                    СОТРУДНИК
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+        
+        {% if is_own_profile and avatar_form %}
+        <form method="POST" enctype="multipart/form-data" class="avatar-form">
+            {% csrf_token %}
+            <input type="hidden" name="update_avatar" value="1">
+            {{ avatar_form.avatar }}
+            {% if avatar_form.avatar.errors %}
+            <div class="error">{{ avatar_form.avatar.errors }}</div>
+            {% endif %}
+            <button type="submit" class="btn-primary">Обновить аватар</button>
+        </form>
+        {% endif %}
+        
+        {% if is_own_profile and password_form %}
+        <form method="POST" class="password-form">
+            {% csrf_token %}
+            <input type="hidden" name="update_password" value="1">
+            
+            <div class="form-group">
+                <label for="id_old_password">Текущий пароль:</label>
+                <input type="password" name="old_password" id="id_old_password" 
+                        class="form-control" required>
+                {% if password_form.old_password.errors %}
+                    <div class="error">{{ password_form.old_password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_new_password1">Новый пароль:</label>
+                <input type="password" name="new_password1" id="id_new_password1" 
+                        class="form-control" required>
+                {% if password_form.new_password1.errors %}
+                    <div class="error">{{ password_form.new_password1.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_new_password2">Подтвердите новый пароль:</label>
+                <input type="password" name="new_password2" id="id_new_password2" 
+                        class="form-control" required>
+                {% if password_form.new_password2.errors %}
+                    <div class="error">{{ password_form.new_password2.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn-primary">Сменить пароль</button>
+        </form>
+        {% endif %}
+    </div>
+    
+    <div class="profile-details">
+        <div class="info-section">
+            <h3>Информация профиля</h3>
+            <p><strong>Имя пользователя:</strong> <span id="current-username">{{ user.username }}</span></p>
+<p><strong>Роль:</strong> 
+    <span class="role-badge role-{{ user.profile.role.title }}">
+        {{ user.profile.role.title }}
+    </span>
+</p>
+            
+            {% if user.is_superuser or user.is_staff %}
+            <div class="admin-info">
+                <h4>🔧 Права администратора:</h4>
+                <ul class="admin-permissions">
+                    {% if user.is_superuser %}
+                    <li>Полный доступ к системе</li>
+                    <li>Управление пользователями</li>
+                    <li>Управление контентом</li>
+                    <li>Доступ к административной панели</li>
+                    {% elif user.is_staff %}
+                    <li>Доступ к административной панели</li>
+                    <li>Управление контентом</li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if user.email %}
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                {% if is_own_profile %}
+                    <a href="{% url 'change_email' %}" class="btn-change-email">Изменить email</a>
+                {% endif %}
+            {% else %}
+                {% if is_own_profile %}
+                    <form method="POST" action="{% url 'add_email' %}" class="email-form-inline">
+                        {% csrf_token %}
+                        <div class="email-input-inline">
+                            <input type="email" 
+                                    name="email" 
+                                    placeholder="Введите ваш email"
+                                    required
+                                    class="email-input-small">
+                            <button type="submit" class="btn-add-email">Добавить</button>
+                        </div>
+                    </form>
+                    <small class="email-hint">Email нужен для восстановления пароля</small>
+                {% else %}
+                    <p><strong>Email:</strong> Не указан</p>
+                {% endif %}
+            {% endif %}
+            
+            <p><strong>Имя:</strong> {{ user.first_name|default:"Не указано" }}</p>
+            <p><strong>Фамилия:</strong> {{ user.last_name|default:"Не указано" }}</p>
+            <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+            <p><strong>Последний вход:</strong> {{ user.last_login|date:"d.m.Y H:i"|default:"Никогда" }}</p>
+            
+            {% if user.is_superuser and is_own_profile %}
+            <div class="admin-stats">
+                <h4>📊 Статистика системы:</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Всего пользователей:</span>
+                        <span class="stat-value">{{ total_users|default:"0" }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Активных новостей:</span>
+                        <span class="stat-value">{{ total_news|default:"0" }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Редакторов:</span>
+                        <span class="stat-value">{{ total_editors|default:"0" }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Администраторов:</span>
+                        <span class="stat-value">{{ total_admins|default:"0" }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if user.is_superuser and is_own_profile %}
+        <div class="admin-tools">
+            <h3>⚙️ Инструменты администратора</h3>
+            <div class="admin-buttons">
+                <a href="{% url 'admin:index' %}" class="admin-btn" target="_blank">
+                    Админ панель Django
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if is_own_profile and username_form %}
+        <div class="username-section">
+            <h3>Изменение имени пользователя</h3>
+            <form method="POST" class="username-form">
+                {% csrf_token %}
+                <input type="hidden" name="update_username" value="1">
+                
+                <div class="form-group">
+                    {{ username_form.username.label_tag }}
+                    {{ username_form.username }}
+                    {% if username_form.username.errors %}
+                    <div class="error">{{ username_form.username.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_current_password">Текущий пароль для подтверждения:</label>
+                    <input type="password" name="current_password" id="id_current_password" 
+                            class="form-control" required>
+                    {% if username_form.current_password.errors %}
+                    <div class="error">{{ username_form.current_password.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn-secondary">Изменить имя пользователя</button>
+            </form>
+        </div>
+        {% endif %}
+        
+{% if request.user.is_superuser %}
+<div class="admin-user-actions">
+    <h3>Действия администратора</h3>
+    <div class="admin-action-buttons">
+        <button type="button" class="admin-action-btn" onclick="openRoleModal()">
+            👑 Изменить роль
+        </button>
+        <button type="button" class="admin-action-btn" onclick="openResetPasswordModal()">
+            🔐 Сбросить пароль
+        </button>
+        <button type="button" class="admin-action-btn" onclick="openStatusModal()">
+            🚫 Управление статусом
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<!-- Модальное окно для изменения роли -->
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Изменение роли пользователя</h3>
+            <span class="modal-close" onclick="closeRoleModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="roleForm" method="POST" action="{% url 'admin_actions' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user_action" value="change_role">
+                
+                <div class="form-group">
+                    <label for="target_user_select">Выберите пользователя:</label>
+                    <select id="target_user_select" name="target_user_id" class="form-control" onchange="updateRoleForm()" required>
+                        <option value="">-- Выберите пользователя --</option>
+                        {% for u in all_users %}
+                            <option value="{{ u.id }}" 
+                                    data-current-role="{% if u.profile.role %}{{ u.profile.role.id }}{% endif %}"
+                                    {% if u.id == user.id %}selected{% endif %}>
+                                {{ u.username }}
+                                {% if u.profile.role %}
+                                    (текущая роль: {{ u.profile.role.title }})
+                                {% else %}
+                                    (роль не назначена)
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new_role">Выберите новую роль:</label>
+                    <select id="new_role" name="new_role" class="form-control" required>
+                        <option value="">-- Выберите роль --</option>
+                        {% for role in all_roles %}
+                            <option value="{{ role.id }}">
+                                {{ role.title }} - {{ role.description }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeRoleModal()">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для сброса пароля -->
+<div id="resetPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Сброс пароля пользователя</h3>
+            <span class="modal-close" onclick="closeResetPasswordModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="resetPasswordForm" method="POST" action="{% url 'admin_actions' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user_action" value="reset_password">
+                
+                <div class="form-group">
+                    <label for="reset_user_select">Выберите пользователя:</label>
+                    <select id="reset_user_select" name="target_user_id" class="form-control" required>
+                        <option value="">-- Выберите пользователя --</option>
+                        {% for u in all_users %}
+                            <option value="{{ u.id }}">
+                                {{ u.username }} ({{ u.email|default:"нет email" }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="password-preview" id="passwordPreview" style="display: none;">
+                        <p><strong>Новый пароль:</strong> <span id="newPasswordText"></span></p>
+                        <input type="hidden" name="new_password" id="newPasswordInput">
+                        <p class="warning-text">⚠ Сохраните этот пароль! Он покажется только один раз.</p>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeResetPasswordModal()">Отмена</button>
+                    <button type="button" class="btn-primary" onclick="handlePasswordReset()">Сбросить пароль</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для управления статусом -->
+<div id="statusModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Управление статусом пользователя</h3>
+            <span class="modal-close" onclick="closeStatusModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="statusForm" method="POST" action="{% url 'admin_actions' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user_action" value="deactivate">
+                
+                <div class="form-group">
+                    <label for="status_user_select">Выберите пользователя:</label>
+                    <select id="status_user_select" name="target_user_id" class="form-control" onchange="updateStatusInfo()" required>
+                        <option value="">-- Выберите пользователя --</option>
+                        {% for u in all_users %}
+                            <option value="{{ u.id }}" data-active="{{ u.is_active }}">
+                                {{ u.username }}
+                                {% if u.is_active %}
+                                    <span style="color: green;">✓ Активен</span>
+                                {% else %}
+                                    <span style="color: red;">✗ Неактивен</span>
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div id="userStatusInfo" style="display: none;">
+                        <p><strong>Текущий статус:</strong> <span id="currentStatus"></span></p>
+                        <p><strong>Действие:</strong> <span id="actionText"></span></p>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeStatusModal()">Отмена</button>
+                    <button type="button" class="btn-primary" id="statusSubmitBtn" onclick="handleStatusChange()">Выполнить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra__js %}
+<script src="{% static "accounts/js/profile.js" %}"></script>
+{% endblock extra__js %}
+{% endblock %}

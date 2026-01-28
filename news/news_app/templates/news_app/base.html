@@ -1,0 +1,155 @@
+{% load static %}
+{% load role_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Новостной портал с актуальными и свежими новостями каждый день">
+<meta name="keywords" content="новости, политика, экономика, спорт, технологии, культура">
+<meta name="author" content="Новостной портал">
+<title>{% block title %}{% endblock title %} | Новостной портал</title>
+<link rel="stylesheet" href="{% static "news_app/css/base.css" %}">
+<link rel="stylesheet" href="{% static "news_app/css/footer.css" %}">
+<link rel="icon" type="image/x-icon" href="{% static 'news_app/image/logo.jpg' %}">
+{% block extra__css %}
+{% endblock extra__css %}
+</head>
+<body>
+<header>
+    <a href="{% url 'home' %}"><img src="{% static 'news_app/image/logo.jpg' %}" alt="Logo"></a>
+    <nav>
+        <ul>
+            <li><a href="{% url 'about' %}">О нас</a></li>
+            <li><a href="{% url 'contacts' %}">Контакты</a></li>
+            <li><a href="{% url 'news' %}">Новости</a></li>
+{% if user.is_authenticated and user|has_any_role:"редактор,администратор" %}
+<li><a href="{% url 'add_news' %}">Добавить новость</a></li>
+{% endif %}
+        </ul>
+    </nav>
+    
+<div class="auth-section">
+    {% if request.user.is_authenticated %}
+        {% if request.user.profile.avatar %}
+            <a href="{% url 'profile' request.user.id %}" class="avatar-link">
+                <img src="{{ request.user.profile.avatar.url }}" alt="avatar" class="avatar">
+            </a>
+        {% elif request.user.email %}
+            <a href="{% url 'profile' request.user.id %}" class="profile-link">{{ request.user.email }}</a>
+        {% else %}
+            <a href="{% url 'profile' request.user.id %}" class="profile-link">{{ request.user.username }}</a>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Войти</a>
+        <a href="{% url 'register' %}" class="register-btn">Регистрация</a>
+    {% endif %}
+</div>
+    {% if user.is_authenticated %}
+    <a href="{% url "logout" %}" class="minimal-logout-btn">
+        <span>Выйти</span>
+        <span class="minimal-icon">→</span>
+    </a>
+    {% endif %}
+
+    <div class="notifications-container" id="notifications">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="notification notification-{{ message.tags }}">
+                <div class="notification-icon">
+                    {% if message.tags == 'success' %}
+                        ✓
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        ✕
+                    {% elif message.tags == 'warning' %}
+                        ⚠
+                    {% elif message.tags == 'info' %}
+                        ℹ
+                    {% endif %}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        {% if message.tags == 'success' %}
+                            Успешно!
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}
+                            Ошибка!
+                        {% elif message.tags == 'warning' %}
+                            Внимание!
+                        {% elif message.tags == 'info' %}
+                            Информация
+                        {% endif %}
+                    </div>
+                    <div class="notification-message">{{ message }}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+</header>
+
+<main class="content-wrapper">
+    {% block content %}
+
+    {% endblock content %}
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <h3>Новостной портал</h3>
+                    <p>Ваш источник актуальных новостей 24/7</p>
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h4>Навигация</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Главная страница</a></li>
+                    <li><a href="{% url 'news' %}">Все новости</a></li>
+                    <li><a href="{% url 'about' %}">О нас</a></li>
+                    <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Информация</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'about' %}">О компании</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Контакты</h4>
+                <div class="contact-info">
+                    <p><strong>Адрес:</strong> г. Москва, ул. Примерная, д. 123</p>
+                    <p><strong>Email:</strong> info@newsportal.ru</p>
+                    <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+                    <p><strong>Редакция:</strong> editor@newsportal.ru</p>
+                    <p><strong>Реклама:</strong> ads@newsportal.ru</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; {% now "Y" %} Новостной портал. Все права защищены.</p>
+                <p>Материалы сайта защищены законодательством РФ</p>
+            </div>
+<div class="footer-stats">
+    <p>Сайт работает на Django</p>
+</div>
+            <div class="footer-certificates">
+                <p class="certificate-link">Возрастная маркировка 18+</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static "news_app/js/base.js" %}"></script>
+{% block extra__js %}
+{% endblock extra__js %}
+</body>
+</html>
